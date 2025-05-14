@@ -5,7 +5,7 @@ import platform
 import re
 import urllib
 
-import Faker
+from faker import Faker
 import yaml
 from requests import Response
 
