@@ -1,11 +1,12 @@
 import json
 import os
+import pathlib
 import platform
 import re
 import urllib
 
+import Faker
 import yaml
-from faker import Faker
 from requests import Response
 
 from swagger_coverage_py.configs import API_DOCS_FORMAT
@@ -126,9 +127,9 @@ class ApiDocsManagerBase:
 
     def _get_header_params(self) -> list:
         return self._get_other_request_params(params_key="headers", params_in="header")
-
+    #TODO - fix this
     def __get_output_subdir(self):
-        return re.match(r"(^\w*)://(.*)", self._uri.host).group(2)
+        return re.match(r"(^\w*)://(.*)", self._uri.host).group(2).replace(".", "_").replace(":", "_")
 
     def write_schema(self):
         schema_dict = self._get_schema()
@@ -137,6 +138,8 @@ class ApiDocsManagerBase:
             "/", "-"
         ).replace(":", "_")
         path_ = f"swagger-coverage-output/{self.__get_output_subdir()}"
+        #TODO - fix this
+        pathlib.Path(path_).mkdir(parents=True, exist_ok=True)
         file_path = f"{path_}/{file_name}".split("?")[0]
         file_path = f"{file_path} ({rnd}).{API_DOCS_FORMAT}"
 
